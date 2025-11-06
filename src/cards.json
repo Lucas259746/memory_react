@@ -1,0 +1,97 @@
+[
+    
+    {
+        "id":0,
+        "pairId":0,
+        "icon":"/image/manga_goku.png",
+        "isFlipped":false,
+        "isMatched":false
+    },
+        {
+        "id":1,
+        "pairId":0,
+        "icon":"/image/manga_goku.png",
+        "isFlipped":false,
+        "isMatched":false
+    },
+
+
+    {
+        "id":2,
+        "pairId":1,
+        "icon":"/image/manga_vegeta.png",
+        "isFlipped":false,
+        "isMatched":false
+    },
+        {
+        "id":3,
+        "pairId":1,
+        "icon":"/image/manga_vegeta.png",
+        "isFlipped":false,
+        "isMatched":false
+    },
+
+
+     {
+        "id":4,
+        "pairId":2,
+        "icon":"/image/manga_gohan_ssj2.png",
+        "isFlipped":false,
+        "isMatched":false
+    },
+        {
+        "id":5,
+        "pairId":2,
+        "icon":"/image/manga_gohan_ssj2.png",
+        "isFlipped":false,
+        "isMatched":false
+    },
+
+
+     {
+        "id":6,
+        "pairId":3,
+        "icon":"/image/manga_picolo_jr.png",
+        "isFlipped":false,
+        "isMatched":false
+    },
+        {
+        "id":7,
+        "pairId":3,
+        "icon":"/image/manga_picolo_jr.png",
+        "isFlipped":false,
+        "isMatched":false
+    },
+
+
+     {
+        "id":8,
+        "pairId":4,
+        "icon":"/image/manga_freeza.png",
+        "isFlipped":false,
+        "isMatched":false
+    },
+        {
+        "id":9,
+        "pairId":4,
+        "icon":"/image/manga_freeza.png",
+        "isFlipped":false,
+        "isMatched":false
+    },
+
+
+     {
+        "id":10,
+        "pairId":5,
+        "icon":"/image/manga_fat_buu.png",
+        "isFlipped":false,
+        "isMatched":false
+    },
+        {
+        "id":11,
+        "pairId":5,
+        "icon":"/image/manga_fat_buu.png",
+        "isFlipped":false,
+        "isMatched":false
+    }
+]
