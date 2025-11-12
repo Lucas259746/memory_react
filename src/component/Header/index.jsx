@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "/Users/dell/my-app/src/App.css";
 
-const Header = ({ onBackHome, onStartGame, onLogin }) => {
+const Header = ({ onBackHome, onStartGame, onLogin, score = 0, isGameStarted = false }) => {
   const [open, setOpen] = useState(false);
 
   const handleClick = (fn) => {
@@ -14,13 +14,15 @@ const Header = ({ onBackHome, onStartGame, onLogin }) => {
       <div className="header-content">
         <h1 className="brand">Memory DBZ</h1>
 
+        {/* Affiche le score seulement quand le jeu est lancé */}
+        <div className="header-stats" style={{ display: isGameStarted ? 'flex' : 'none', gap: 12, alignItems: 'center' }}>
+          <span className="score">Score : {score}</span>
+        </div>
+
         <nav className={`nav ${open ? "open" : ""}`} aria-hidden={!open}>
           <ul>
             <li>
               <button onClick={() => handleClick(onBackHome)}>Accueil</button>
-            </li>
-            <li>
-              <button onClick={() => handleClick(onLogin)}>Connexion</button>
             </li>
             <li>
               <button onClick={() => handleClick(onStartGame)}>Accès au jeu</button>

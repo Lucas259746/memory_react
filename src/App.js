@@ -9,6 +9,8 @@ import Home from './pages/Home/';
 function App() {
   const [isGameStarted, setIsGameStarted] = useState(false);
 
+  const [score, setScore] = useState(0);
+
   const shuffleCards = (array) => {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -31,11 +33,12 @@ function App() {
     }
   }, [cards]);
 
-  useEffect(() => {
+useEffect(() => {
     if (choiceOne && choiceTwo) {
       setIsDisabled(true);
 
       if (choiceOne.pairId === choiceTwo.pairId) {
+        // paire trouvée -> marquer et ajouter score
         setCards((prevCards) => {
           return prevCards.map((card) => {
             if (card.pairId === choiceOne.pairId) {
@@ -44,6 +47,8 @@ function App() {
             return card;
           });
         });
+        // ajouter 20 points par paire
+        setScore((s) => s + 20);
         resetTurn();
       } else {
         setTimeout(() => {
@@ -61,6 +66,24 @@ function App() {
     }
   }, [choiceOne, choiceTwo]);
 
+  const handleNewGame = () => {
+    setCards(shuffleCards(deck));
+    setChoiceOne(null);
+    setChoiceTwo(null);
+    setIsDisabled(false);
+    setVictory(false);
+    setScore(0); // reset score à nouvelle partie
+  };
+
+  const startGame = () => {
+    setScore(0); // démarrer avec score à 0
+    setIsGameStarted(true);
+  };
+
+  const backHome = () => {
+    setIsGameStarted(false);
+    handleNewGame();
+  };
   const resetTurn = () => {
     setChoiceOne(null);
     setChoiceTwo(null);
@@ -68,40 +91,22 @@ function App() {
   };
 
   const handleChoice = (cardClicked) => {
-    if (
-      isDisabled ||
-      cardClicked.isMatched ||
-      (choiceOne && choiceOne.id === cardClicked.id)
-    ) {
+    // empêche clics pendant délai, ou sur carte déjà trouvée, ou double clic sur même carte
+    if (isDisabled || cardClicked.isMatched || (choiceOne && choiceOne.id === cardClicked.id)) {
       return;
     }
 
-    setCards((prevCards) => {
-      return prevCards.map((card) => {
-        if (card.id === cardClicked.id) {
-          return { ...card, isFlipped: true };
-        }
-        return card;
-      });
-    });
-    choiceOne ? setChoiceTwo(cardClicked) : setChoiceOne(cardClicked);
-  };
+    // retourne la carte cliquée (isFlipped = true)
+    setCards((prevCards) =>
+      prevCards.map((c) => (c.id === cardClicked.id ? { ...c, isFlipped: true } : c))
+    );
 
-  const handleNewGame = () => {
-    setCards(shuffleCards(deck));
-    setChoiceOne(null);
-    setChoiceTwo(null);
-    setIsDisabled(false);
-    setVictory(false);
-  };
-
-  const startGame = () => {
-    setIsGameStarted(true);
-  };
-
-  const backHome = () => {
-    setIsGameStarted(false);
-    handleNewGame();
+    // enregistre le choix 1 ou 2
+    if (!choiceOne) {
+      setChoiceOne(cardClicked);
+    } else {
+      setChoiceTwo(cardClicked);
+    }
   };
 
   // Affiche la page d'accueil si le jeu n'a pas commencé
@@ -111,7 +116,13 @@ function App() {
 
   return (
     <div className="App">
-      <Header onBackHome={backHome} />
+      {/* passer le score et isGameStarted au Header */}
+      <Header
+        onBackHome={backHome}
+        onStartGame={startGame}
+        score={score}
+        isGameStarted={isGameStarted}
+      />
       <div className="background"></div>
       {victory === true ? (
         <div>

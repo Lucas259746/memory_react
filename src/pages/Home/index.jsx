@@ -12,7 +12,6 @@ const Home = ({ onStartGame, onBackHome, onLogin }) => {
           <p>Bienvenue dans le jeu Memory Dragon Ball Z!</p>
           <div className="home-buttons">
             <button className="btn-start" onClick={onStartGame}>Commencer</button>
-            <button className="btn-rules">Règles</button>
           </div>
         </div>
       </div>
