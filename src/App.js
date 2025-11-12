@@ -1,13 +1,14 @@
 
 import './App.css';
-
 import React, { useEffect, useState } from "react";
 import Card from "./component/Card/index.jsx";
 import deck from "./cards.json";
-import Header from './Header.jsx';
-
+import Header from './component/Header';
+import Home from './pages/Home/';
 
 function App() {
+  const [isGameStarted, setIsGameStarted] = useState(false);
+
   const shuffleCards = (array) => {
     const shuffled = [...array];
     for (let i = shuffled.length - 1; i > 0; i--) {
@@ -18,7 +19,6 @@ function App() {
   };
 
   const [cards, setCards] = useState(() => shuffleCards(deck));
-
   const [choiceOne, setChoiceOne] = useState(null);
   const [choiceTwo, setChoiceTwo] = useState(null);
   const [isDisabled, setIsDisabled] = useState(false);
@@ -29,9 +29,6 @@ function App() {
     if (allMatched) {
       setVictory(true);
     }
-    /*if (!document.fullscreenElement) {
-      document.documentElement.requestFullscreen();
-    }*/
   }, [cards]);
 
   useEffect(() => {
@@ -98,15 +95,32 @@ function App() {
     setVictory(false);
   };
 
+  const startGame = () => {
+    setIsGameStarted(true);
+  };
+
+  const backHome = () => {
+    setIsGameStarted(false);
+    handleNewGame();
+  };
+
+  // Affiche la page d'accueil si le jeu n'a pas commencé
+  if (!isGameStarted) {
+    return <Home onStartGame={startGame} />;
+  }
+
   return (
     <div className="App">
-      <Header />
+      <Header onBackHome={backHome} />
       <div className="background"></div>
       {victory === true ? (
         <div>
           <h2>Bravo !!</h2>
           <button className="restart" onClick={handleNewGame}>
             Nouvelle partie
+          </button>
+          <button className="restart" onClick={backHome}>
+            Accueil
           </button>
         </div>
       ) : (
