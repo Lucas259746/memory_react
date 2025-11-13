@@ -1,4 +1,3 @@
-
 import './App.css';
 import React, { useEffect, useState } from "react";
 import Card from "./component/Card/index.jsx";
@@ -8,7 +7,6 @@ import Home from './pages/Home/';
 
 function App() {
   const [isGameStarted, setIsGameStarted] = useState(false);
-
   const [score, setScore] = useState(0);
 
   const shuffleCards = (array) => {
@@ -26,6 +24,9 @@ function App() {
   const [isDisabled, setIsDisabled] = useState(false);
   const [victory, setVictory] = useState(false);
 
+  // Timer: seconds remaining
+  const [timeLeft, setTimeLeft] = useState(90); // 1m30s = 90s
+
   useEffect(() => {
     const allMatched = cards.every((card) => card.isMatched);
     if (allMatched) {
@@ -33,7 +34,26 @@ function App() {
     }
   }, [cards]);
 
-useEffect(() => {
+  // Timer interval effect: runs only while game started and not victory
+  useEffect(() => {
+    if (!isGameStarted || victory) return undefined;
+
+    const interval = setInterval(() => {
+      setTimeLeft((prev) => {
+        if (prev <= 1) {
+          // time's up
+          clearInterval(interval);
+          setVictory(true);
+          return 0;
+        }
+        return prev - 1;
+      });
+    }, 1000);
+
+    return () => clearInterval(interval);
+  }, [isGameStarted, victory]);
+
+  useEffect(() => {
     if (choiceOne && choiceTwo) {
       setIsDisabled(true);
 
@@ -72,18 +92,39 @@ useEffect(() => {
     setChoiceTwo(null);
     setIsDisabled(false);
     setVictory(false);
-    setScore(0); // reset score à nouvelle partie
+    setScore(0);
+    setTimeLeft(90);
+    setIsGameStarted(true); // démarre la partie
   };
 
+  // startGame (déclenché depuis l'accueil ou le header) : idem que handleNewGame
   const startGame = () => {
-    setScore(0); // démarrer avec score à 0
-    setIsGameStarted(true);
-  };
-
-  const backHome = () => {
-    setIsGameStarted(false);
     handleNewGame();
   };
+
+  // backHome : retourne à l'accueil **sans** démarrer une nouvelle partie
+  const backHome = () => {
+    setIsGameStarted(false);
+    // remettre l'état de jeu dans un état neutre (sans lancer la partie)
+    setChoiceOne(null);
+    setChoiceTwo(null);
+    setIsDisabled(false);
+    setVictory(false);
+    setScore(0);
+    setTimeLeft(90);
+    // ne PAS appeler handleNewGame() ici
+  };
+
+  // Confirmation wrapper: demande confirmation si une partie est en cours
+  const requestBackHome = () => {
+    if (!isGameStarted) {
+      backHome();
+      return;
+    }
+    const leave = window.confirm('Quitter la partie en cours ? Votre progression sera perdue.');
+    if (leave) backHome();
+  };
+
   const resetTurn = () => {
     setChoiceOne(null);
     setChoiceTwo(null);
@@ -109,28 +150,31 @@ useEffect(() => {
     }
   };
 
+  // format time mm:ss
+  const formattedTime = `${Math.floor(timeLeft / 60)}:${String(timeLeft % 60).padStart(2, '0')}`;
+
   // Affiche la page d'accueil si le jeu n'a pas commencé
-  if (!isGameStarted) {
-    return <Home onStartGame={startGame} />;
+   if (!isGameStarted) {
+    return <Home onStartGame={startGame} onBackHome={requestBackHome} onLogin={() => {}} />;
   }
 
   return (
     <div className="App">
-      {/* passer le score et isGameStarted au Header */}
       <Header
-        onBackHome={backHome}
+        onBackHome={requestBackHome}
         onStartGame={startGame}
         score={score}
         isGameStarted={isGameStarted}
+        timer={formattedTime}
       />
       <div className="background"></div>
       {victory === true ? (
         <div>
-          <h2>Bravo !!</h2>
+          <h2>{timeLeft === 0 ? "Temps écoulé" : "Bravo !!"}</h2>
           <button className="restart" onClick={handleNewGame}>
             Nouvelle partie
           </button>
-          <button className="restart" onClick={backHome}>
+          <button className="restart" onClick={requestBackHome}>
             Accueil
           </button>
         </div>
