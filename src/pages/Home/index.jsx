@@ -1,6 +1,6 @@
 import React from 'react';
 import './styles.css';
-import Header from '../../component/Header'; // <- importer
+import Header from '../../component/Header'; 
 
 const Home = ({ onStartGame, onBackHome, onLogin }) => {
   return (
