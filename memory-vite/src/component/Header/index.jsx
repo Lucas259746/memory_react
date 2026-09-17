@@ -1,5 +1,5 @@
 import React, { useState } from "react";
-import "/Users/dell/my-app/src/App.css";
+import '../../App.css';
 
 const Header = ({ onBackHome, onStartGame, onLogin, score = 0, isGameStarted = false, timer = "0:00" }) => {
   const [open, setOpen] = useState(false);

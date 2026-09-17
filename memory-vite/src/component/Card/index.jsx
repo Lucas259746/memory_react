@@ -1,6 +1,4 @@
 
-import "/Users/dell/my-app/src/App.css"
-
 const Card = ({card, isFlipped, isMatched, handleChoice}) => {
     return (
         <div className="card">
